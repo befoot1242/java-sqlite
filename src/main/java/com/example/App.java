@@ -1,5 +1,6 @@
 package com.example;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -14,12 +15,24 @@ public class App {
         try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement()) {
 
+            String dropTable = "drop table students";
+            stmt.execute(dropTable);
+
             // テーブルの作成
-            String createTableSql = "CREATE TABLE IF NOT EXISTS students (id INTEGER PRIMARY KEY, name TEXT)";
+            String createTableSql = "";
+            createTableSql += "CREATE TABLE IF NOT EXISTS students";
+            createTableSql += "(";
+            createTableSql += "id INTEGER PRIMARY KEY,";
+            createTableSql += "name TEXT";
+            createTableSql += ")";
             stmt.execute(createTableSql);
 
             // データの挿入
             String insertSql = "INSERT INTO students (name) VALUES ('John Doe')";
+            stmt.execute(insertSql);
+            insertSql = "INSERT INTO students (name) VALUES ('test1')";
+            stmt.execute(insertSql);
+            insertSql = "INSERT INTO students (name) VALUES ('test2')";
             stmt.execute(insertSql);
 
             // データの取得
@@ -30,6 +43,7 @@ public class App {
             while (rs.next()) {
                 System.out.println("ID: " + rs.getInt("id") + ", Name: " + rs.getString("name"));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
